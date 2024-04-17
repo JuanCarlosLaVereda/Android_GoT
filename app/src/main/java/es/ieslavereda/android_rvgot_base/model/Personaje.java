@@ -1,6 +1,8 @@
 package es.ieslavereda.android_rvgot_base.model;
 
-public class Personaje {
+import java.io.Serializable;
+
+public class Personaje implements Serializable{
     private String nombre;
     private Casa casa;
 

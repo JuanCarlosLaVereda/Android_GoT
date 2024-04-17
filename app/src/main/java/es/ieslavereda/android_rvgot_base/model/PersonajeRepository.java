@@ -54,5 +54,9 @@ public class PersonajeRepository {
 
     public void add(int index, Personaje usuario) { personajes.add(index, usuario); }
 
+    public List<Personaje> getAll(){
+        return personajes;
+    }
+
 
 }
