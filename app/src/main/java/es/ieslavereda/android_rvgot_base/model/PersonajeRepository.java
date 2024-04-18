@@ -1,6 +1,8 @@
 package es.ieslavereda.android_rvgot_base.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PersonajeRepository {
@@ -56,6 +58,10 @@ public class PersonajeRepository {
 
     public List<Personaje> getAll(){
         return personajes;
+    }
+
+    public void sort(Comparator comparator){
+        Collections.sort(personajes, comparator);
     }
 
 

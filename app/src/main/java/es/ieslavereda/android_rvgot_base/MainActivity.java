@@ -23,16 +23,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Collections;
+
 import es.ieslavereda.android_rvgot_base.model.Personaje;
 import es.ieslavereda.android_rvgot_base.model.PersonajeRepository;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private RecyclerView recycler;
 
     private PersonajeRepository personajes;
 
     private ImageButton addButton;
+    private Switch switchOdenar;
+    private Button list;
+    private Button grid;
+    private boolean isLinear;
+    AdaptadorRecyclerView adaptador;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +49,15 @@ public class MainActivity extends AppCompatActivity{
 
         recycler = findViewById(R.id.recyclerView);
         addButton = findViewById(R.id.add);
+        switchOdenar = findViewById(R.id.switch_ordenar);
+        list = findViewById(R.id.list_button);
+        grid = findViewById(R.id.grid_button);
 
         personajes = PersonajeRepository.getInstance();
+        personajes.sort(Personaje.SORT_BY_NAME);
 
-        AdaptadorRecyclerView adaptador = new AdaptadorRecyclerView(this);
+        adaptador = new AdaptadorRecyclerView(this);
+        adaptador.setOnClickListener(this);
         recycler.setAdapter(adaptador);
         recycler.setLayoutManager(new GridLayoutManager(this, 2));
 
@@ -65,5 +78,43 @@ public class MainActivity extends AppCompatActivity{
             Intent intent = new Intent(this, ActivityAdd.class);
             resoultLauncher.launch(intent);
         });
+
+        switchOdenar.setOnCheckedChangeListener((buttonview, isChecked) -> {
+            if (isChecked) {
+                personajes.sort(Personaje.SORT_BY_CASA);
+                adaptador.notifyDataSetChanged();
+            } else {
+                personajes.sort(Personaje.SORT_BY_NAME);
+                adaptador.notifyDataSetChanged();
+            }
+        });
+
+        list.setOnClickListener(view -> {
+            isLinear = true;
+            updateRecycle();
+        });
+        grid.setOnClickListener(view -> {
+            isLinear = false;
+            updateRecycle();
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        Personaje personaje = PersonajeRepository.getInstance().get(recycler.getChildAdapterPosition(view));
+        Intent intent = new Intent(this, ActivityInfo.class);
+        intent.putExtra("Personaje", personaje);
+        startActivity(intent);
+    }
+
+    public void updateRecycle(){
+        if (isLinear){
+            adaptador.setLayout_displayed(R.layout.simple_element_list);
+            recycler.setLayoutManager(new LinearLayoutManager(this));
+        } else {
+            adaptador.setLayout_displayed(R.layout.simple_element_grid);
+            recycler.setLayoutManager(new GridLayoutManager(this, 2));
+        }
+        recycler.getRecycledViewPool().clear();
     }
 }

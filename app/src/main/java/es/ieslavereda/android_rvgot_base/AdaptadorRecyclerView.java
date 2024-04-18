@@ -20,6 +20,8 @@ public class AdaptadorRecyclerView extends RecyclerView.Adapter<AdaptadorRecycle
     private LayoutInflater layoutInflater;
 
     private List<Personaje> personajes;
+    private View.OnClickListener onClickListener;
+    private int layout_displayed;
 
     public AdaptadorRecyclerView(Context context){
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -30,8 +32,17 @@ public class AdaptadorRecyclerView extends RecyclerView.Adapter<AdaptadorRecycle
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.simple_element, parent, false);
+        View view = layoutInflater.inflate(layout_displayed, parent, false);
+        view.setOnClickListener(onClickListener);
         return new ViewHolder(view);
+    }
+
+    public void setLayout_displayed(int layout_displayed){
+        this.layout_displayed=layout_displayed;
+    }
+
+    public void setOnClickListener(View.OnClickListener onClickListener){
+        this.onClickListener = onClickListener;
     }
 
     @Override

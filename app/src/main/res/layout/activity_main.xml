@@ -10,7 +10,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/switch_ordenar"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/add"
@@ -21,4 +28,35 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <Switch
+        android:id="@+id/switch_ordenar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Ordenar por casa"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/grid_button"
+        app:layout_constraintTop_toTopOf="@+id/grid_button" />
+
+    <Button
+        android:id="@+id/list_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List"
+        app:layout_constraintEnd_toStartOf="@+id/grid_button"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/grid_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Grid"
+        app:layout_constraintEnd_toStartOf="@+id/switch_ordenar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/list_button"
+        app:layout_constraintTop_toTopOf="@+id/list_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
