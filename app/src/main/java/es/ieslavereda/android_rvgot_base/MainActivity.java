@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switchOdenar = findViewById(R.id.switch_ordenar);
         list = findViewById(R.id.list_button);
         grid = findViewById(R.id.grid_button);
+        isLinear = true;
 
         personajes = PersonajeRepository.getInstance();
         personajes.sort(Personaje.SORT_BY_NAME);
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adaptador = new AdaptadorRecyclerView(this);
         adaptador.setOnClickListener(this);
         recycler.setAdapter(adaptador);
-        recycler.setLayoutManager(new GridLayoutManager(this, 2));
+        updateRecycle();
 
         ActivityResultLauncher<Intent> resoultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -97,6 +98,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             isLinear = false;
             updateRecycle();
         });
+
+        ItemTouchHelper objetoDeslizar = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,
+                        ItemTouchHelper.LEFT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                        int posDestino = target.getAdapterPosition();
+                        int posicionInicial = viewHolder.getAdapterPosition();
+                        Personaje personaje = PersonajeRepository.getInstance().get(posicionInicial);
+
+                        PersonajeRepository.getInstance().remove(personaje);
+                        PersonajeRepository.getInstance().add(posDestino, personaje);
+
+                        adaptador.notifyItemMoved(posicionInicial, posDestino);
+                        return true;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        int posicion = viewHolder.getAdapterPosition();
+                        Personaje personaje = PersonajeRepository.getInstance().get(posicion);
+                        PersonajeRepository.getInstance().remove(personaje);
+                        adaptador.notifyItemRemoved(posicion);
+                        Snackbar.make(recycler, "Borrado el personaje: " + personaje.getNombre(), Snackbar.LENGTH_SHORT).setAction("Undo", view -> {
+                            PersonajeRepository.getInstance().add(posicion, personaje);
+                            adaptador.notifyItemInserted(posicion);
+                        }).show();
+
+                    }
+                }
+        );
+
+        objetoDeslizar.attachToRecyclerView(recycler);
     }
 
     @Override
